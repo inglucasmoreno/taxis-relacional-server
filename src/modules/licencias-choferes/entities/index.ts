@@ -1,0 +1,1 @@
+export { LicenciasChoferes } from './licencias-choferes.entity';

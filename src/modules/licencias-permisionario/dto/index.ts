@@ -1,0 +1,1 @@
+export { LicenciasPermisionariosDTO } from './licencias-permisionarios.dto';

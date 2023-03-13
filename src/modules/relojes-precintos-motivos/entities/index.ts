@@ -1,0 +1,1 @@
+export { RelojesPrecintosMotivos } from './relojes-precintos-motivos.entity';

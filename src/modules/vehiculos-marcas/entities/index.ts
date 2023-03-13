@@ -1,0 +1,1 @@
+export { VehiculosMarcas } from './vehiculos-marcas.entity';

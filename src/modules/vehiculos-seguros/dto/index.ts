@@ -1,0 +1,1 @@
+export { VehiculosSegurosDTO } from './vehiculos-seguros.dto';

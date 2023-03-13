@@ -1,0 +1,1 @@
+export { LicenciasDTO } from './licencias.dto';

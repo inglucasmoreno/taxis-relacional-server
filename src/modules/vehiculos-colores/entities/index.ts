@@ -1,0 +1,1 @@
+export { VehiculosColores } from './vehiculos-colores.entity';

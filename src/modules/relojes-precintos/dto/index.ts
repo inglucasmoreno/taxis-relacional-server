@@ -1,0 +1,1 @@
+export { RelojesPrecintosDTO } from './relojes-precintos.dto';

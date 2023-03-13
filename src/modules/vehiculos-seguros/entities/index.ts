@@ -1,0 +1,1 @@
+export { VehiculosSeguros } from './vehiculos-seguros.entity';

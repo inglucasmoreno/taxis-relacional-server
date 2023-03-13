@@ -1,0 +1,1 @@
+export { SegurosEmpresas } from './seguros-empresas.entity';

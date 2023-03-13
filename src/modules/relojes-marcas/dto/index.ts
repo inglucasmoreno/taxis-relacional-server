@@ -1,0 +1,1 @@
+export { RelojesMarcasDTO } from './relojes-marcas.dto';

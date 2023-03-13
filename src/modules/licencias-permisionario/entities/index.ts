@@ -1,0 +1,1 @@
+export { LicenciasPermisionarios } from './licencias-permisionarios.entity';

@@ -1,0 +1,1 @@
+export { LicenciasVehiculosDTO } from './licencias-vehiculos.dto';

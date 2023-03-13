@@ -1,0 +1,1 @@
+export { RelojesPrecintosMotivosDTO } from './relojes-precintos-motivos.dto';
