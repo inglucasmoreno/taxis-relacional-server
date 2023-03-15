@@ -37,7 +37,7 @@ export class LicenciasService {
   async insert(licenciasDTO: any): Promise<Licencias[]> {
 
     // Uppercase
-    licenciasDTO.estado = licenciasDTO.estado.toLocaleUpperCase().trim();
+    licenciasDTO.estado = licenciasDTO.estado?.toLocaleUpperCase().trim();
 
     const { nro_licencia } = licenciasDTO;
 

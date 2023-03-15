@@ -18,7 +18,7 @@ export class Licencias {
   nro_licencia: string;
 
   @Column({ 
-    nullable: false,
+    default: 'Habilitada',
     type: 'varchar',
     length: 100
    })

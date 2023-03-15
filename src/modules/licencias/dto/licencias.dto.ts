@@ -6,6 +6,7 @@ export class LicenciasDTO {
   readonly nro_licencia: string;
 
   @IsString()
+  @IsOptional()
   readonly estado: string;
   
   @IsBoolean()
