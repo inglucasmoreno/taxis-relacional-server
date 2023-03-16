@@ -13,19 +13,49 @@ export class VehiculosService {
   // Vehiculo por ID
   async getId(id: number): Promise<Vehiculos> {
 
-    const vehiculo = await this.vehiculosRepository.findOne({ relations: [
-      'marca', 
-      'modelo', 
-      'color', 
-      'seguro', 
-      'seguro.empresa',
-      'creatorUser',
-      'updatorUser',
-    ], where: { id } });
+    const vehiculo = await this.vehiculosRepository.findOne({
+      relations: [
+        'marca',
+        'modelo',
+        'color',
+        'seguro',
+        'seguro.empresa',
+        'creatorUser',
+        'updatorUser',
+      ], where: { id }
+    });
     if (!vehiculo) throw new NotFoundException('El vehiculo no existe');
     return vehiculo;
 
   }
+
+  // Vehiculo por Parametro
+  async getParametro(data: any): Promise<Vehiculos> {
+
+    const { parametro, valor } = data;
+
+    // Vehiculo por parametro
+    const condicion: any = {};
+    condicion[parametro] = valor.toUpperCase();
+
+    const vehiculo = await this.vehiculosRepository.findOne({
+      relations: [
+        'marca',
+        'modelo',
+        'color',
+        'seguro',
+        'seguro.empresa',
+        'creatorUser',
+        'updatorUser',
+      ], where: condicion
+    });
+    
+    // if (!vehiculo) throw new NotFoundException('El vehiculo no existe');
+
+    return vehiculo;
+
+  }
+
 
   // Listar todos los vehiculos
   async getAll({
@@ -46,14 +76,14 @@ export class VehiculosService {
 
     // Filtrado por patente
     where.push({ patente: Like('%' + parametro.toUpperCase() + '%') });
-    
+
     // Filtrado por marca
     where.push({
       marca: {
         descripcion: Like('%' + parametro.toUpperCase() + '%')
       }
     });
-    
+
     // Filtrado por modelo 
     where.push({
       modelo: {
@@ -68,15 +98,15 @@ export class VehiculosService {
       }
     });
 
-    const totalItems = await this.vehiculosRepository.count({ where});
+    const totalItems = await this.vehiculosRepository.count({ where });
 
     const vehiculos = await this.vehiculosRepository
       .find({
         relations: [
-          'marca', 
-          'modelo', 
-          'color', 
-          'seguro', 
+          'marca',
+          'modelo',
+          'color',
+          'seguro',
           'seguro.empresa',
           'creatorUser',
           'updatorUser',
@@ -95,7 +125,7 @@ export class VehiculosService {
   }
 
   // Crear vehiculo
-  async insert(vehiculosDTO: any): Promise<Vehiculos[]> {
+  async insert(vehiculosDTO: any): Promise<Vehiculos> {
 
     // Uppercase
     vehiculosDTO.patente = vehiculosDTO.patente.toLocaleUpperCase().trim();
@@ -107,7 +137,9 @@ export class VehiculosService {
     if (vehiculoDB) throw new NotFoundException('La patente ya se encuentra cargada');
 
     const nuevoVehiculo = await this.vehiculosRepository.create(vehiculosDTO);
-    return this.vehiculosRepository.save(nuevoVehiculo);
+    const vehiculoDBNuevo: any = await this.vehiculosRepository.save(nuevoVehiculo);
+
+    return this.getId(vehiculoDBNuevo.id);
 
   }
 

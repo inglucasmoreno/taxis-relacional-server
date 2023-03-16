@@ -13,12 +13,15 @@ export class LicenciasController {
   @Get(':id')
   async licenciaPorId(@Res() res, @Param('id') id: number): Promise<Licencias> {
 
-    const licencia = await this.licenciasService.getId(id);
-
+    const { licencia, permisionario, choferes, vehiculo } = await this.licenciasService.getId(id);
+    
     return res.status(HttpStatus.OK).json({
       success: true,
       message: 'Licencia obtenida correctamente',
-      licencia
+      licencia,
+      permisionario,
+      choferes,
+      vehiculo
     })
 
   }

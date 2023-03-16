@@ -1,5 +1,6 @@
 import { Licencias } from "src/modules/licencias/entities";
 import { Personas } from "src/modules/personas/entities";
+import { Usuarios } from "src/modules/usuarios/entities";
 import { Vehiculos } from "src/modules/vehiculos/entities";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -9,10 +10,14 @@ export class LicenciasVehiculos {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column()
+  @Column({
+    default: new Date()
+  })
   fecha_alta: Date;
 
-  @Column()
+  @Column({
+    default: new Date()
+  })
   fecha_baja: Date;
 
   @Column({
@@ -87,5 +92,11 @@ export class LicenciasVehiculos {
   @ManyToOne(() => Licencias, licencia => licencia.licencia_vehiculo)
   @JoinColumn({ name: 'licencia_id' })
   licencia: Licencias
+
+  @ManyToOne(() => Usuarios, usuario => usuario.licencias_vehiculos)
+  creatorUser: Usuarios;
+
+  @ManyToOne(() => Usuarios, usuario => usuario.licencias_vehiculos)
+  updatorUser: Usuarios;
 
 }

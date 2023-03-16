@@ -9,10 +9,14 @@ export class LicenciasChoferes {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column()
+  @Column({
+    default: new Date()
+  })
   fecha_alta: Date;
 
-  @Column()
+  @Column({
+    default: new Date()
+  })
   fecha_baja: Date;
 
   @Column({

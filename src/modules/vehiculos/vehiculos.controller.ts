@@ -23,6 +23,17 @@ export class VehiculosController {
 
   }
 
+  // Vehiculo por parametro
+  @UseGuards(JwtAuthGuard)
+  @Get('/:parametro/:valor')
+  async getParametro(@Res() res, @Param() parametros) {
+      const vehiculo = await this.vehiculosService.getParametro(parametros);
+      res.status(HttpStatus.OK).json({
+          message: 'Vehiculo obtenido correctamente',
+          vehiculo
+      });
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get()
   async listarVehiculos(@Res() res, @Query() query): Promise<Vehiculos[]> {

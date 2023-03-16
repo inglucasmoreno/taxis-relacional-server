@@ -12,22 +12,27 @@ export class LicenciasPermisionarioService {
 
   // Relacion por ID
   async getId(id: number): Promise<LicenciasPermisionarios> {
-
     const relacion = await this.licenciasPermisionariosRepository.findOne({ relations: ['licencia', 'persona'], where: { id } });
     if (!relacion) throw new NotFoundException('La relacion no existe');
     return relacion;
-  
   }
   
   // Listar relaciones
-  async getAll({ columna, direccion }: any): Promise<LicenciasPermisionarios[]> {
+  async getAll({ columna, direccion, licencia }: any): Promise<LicenciasPermisionarios[]> {
 
     let order = {};
-    order[columna] = direccion;
+    order['activo'] = -1;
+    // order[columna] = direccion;
+    order['persona'] = { apellido: 1 };
 
     let parametros: any = { order };
 
-    const relaciones = await this.licenciasPermisionariosRepository.find({ relations: ['licencia', 'persona'] });
+    const relaciones = await this.licenciasPermisionariosRepository.find({ 
+      relations: ['licencia', 'persona'],
+      order, 
+      where: { licencia: { id: licencia } },
+      // order: { activo: -1, persona: { apellido: 1 } }
+    });
 
     return relaciones;
 
@@ -35,7 +40,22 @@ export class LicenciasPermisionarioService {
 
   // Crear relacion
   async insert(licenciasPermisionariosDTO: any): Promise<LicenciasPermisionarios[]> {
-        
+    
+    const { licencia, persona } = licenciasPermisionariosDTO;
+
+    // Se verifica si el permisionario ya esta dado de alta en esta licencia
+    const altaExistente = await this.licenciasPermisionariosRepository.findOne({ 
+      where: { 
+        activo: true, 
+        licencia: { id: licencia }, 
+        persona: { id: persona } 
+      } 
+    });
+    if(altaExistente) throw new NotFoundException('El permisionario ya esta activo en esta licencia');
+
+    // Se da de baja el permisionario actual
+    await this.licenciasPermisionariosRepository.update({ licencia }, { activo: false });
+
     // Uppercase
     licenciasPermisionariosDTO.expediente = licenciasPermisionariosDTO.expediente?.toLocaleUpperCase().trim();
     licenciasPermisionariosDTO.libre_deuda_jf_anterior = licenciasPermisionariosDTO.libre_deuda_jf_anterior?.toLocaleUpperCase().trim();
@@ -43,7 +63,8 @@ export class LicenciasPermisionarioService {
     licenciasPermisionariosDTO.sellado_control_tecnico = licenciasPermisionariosDTO.sellado_control_tecnico?.toLocaleUpperCase().trim();
     licenciasPermisionariosDTO.sellado_desinfeccion = licenciasPermisionariosDTO.sellado_desinfeccion?.toLocaleUpperCase().trim();
     licenciasPermisionariosDTO.sellado_transferencia = licenciasPermisionariosDTO.sellado_transferencia?.toLocaleUpperCase().trim();
-    
+
+    // Nueva relacion
     const nuevaRelacion = await this.licenciasPermisionariosRepository.create(licenciasPermisionariosDTO);
     return this.licenciasPermisionariosRepository.save(nuevaRelacion);
 

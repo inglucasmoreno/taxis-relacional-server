@@ -20,14 +20,30 @@ export class LicenciasVehiculosService {
   }
   
   // Listar relaciones
-  async getAll({ columna, direccion }: any): Promise<LicenciasVehiculos[]> {
+  async getAll({ columna, direccion, licencia }: any): Promise<LicenciasVehiculos[]> {
 
     let order = {};
     order[columna] = direccion;
 
-    let parametros: any = { order };
-
-    const relaciones = await this.licenciasVehiculosRepository.find({ relations: ['licencia', 'vehiculo'] });
+    const relaciones = await this.licenciasVehiculosRepository.find({ 
+      relations: {
+        vehiculo: {
+          marca: true,
+          modelo: true
+        },
+        creatorUser: true,
+        updatorUser: true
+      },
+      order: {
+        activo: -1,
+        vehiculo: {
+          patente: 1
+        }
+      },
+      where: {
+        licencia: { id: licencia }
+      }
+    });
 
     return relaciones;
 
@@ -35,7 +51,29 @@ export class LicenciasVehiculosService {
 
   // Crear relacion
   async insert(licenciasVehiculosDTO: any): Promise<LicenciasVehiculos[]> {
-        
+      
+    const { vehiculo, licencia } = licenciasVehiculosDTO;
+
+    // El vehiculo se encuentra asociado a otra licencia
+    const altaExistente = await this.licenciasVehiculosRepository.findOne({
+      relations: {
+        licencia: true,
+        vehiculo: {
+          marca: true,
+          modelo: true
+        }
+      },
+      where: {
+        vehiculo: { id: vehiculo },
+        activo: true
+      }
+    });
+
+    if(altaExistente) throw new NotFoundException(`El vehículo ya se encuentra asociado a la licencia ${altaExistente.licencia.nro_licencia}`);
+
+    // Se da de baja el vehiculo actual
+    await this.licenciasVehiculosRepository.update({ licencia }, { activo: false });
+
     // Uppercase
     licenciasVehiculosDTO.expediente = licenciasVehiculosDTO.expediente?.toLocaleUpperCase().trim();
     licenciasVehiculosDTO.libre_deuda_jf_anterior = licenciasVehiculosDTO.libre_deuda_jf_anterior?.toLocaleUpperCase().trim();

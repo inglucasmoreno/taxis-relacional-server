@@ -49,11 +49,11 @@ export class SigemService {
       if(personaDB){ // Actualizar datos
         
         const dataUpdate = {
-          apellido: respuesta.data.informacion.apellido,
-          nombre: respuesta.data.informacion.nombre,
+          apellido: respuesta.data.informacion.apellido?.toLocaleUpperCase(),
+          nombre: respuesta.data.informacion.nombre?.toLocaleUpperCase(),
           dni: respuesta.data.informacion.dni,
-          domicilio: respuesta.data.informacion.domicilio,
-          telefono: respuesta.data.informacion.telefno,
+          domicilio: respuesta.data.informacion.domicilio?.toLocaleUpperCase(),
+          telefono: respuesta.data.informacion.telefono,
           mail: respuesta.data.informacion.mail,
           sigem: true,
           updatorUser: data.updatorUser,
@@ -71,8 +71,13 @@ export class SigemService {
           updatorUser
         }
 
+        // Aplicamos UPPERCASE
+        dataCreator.apellido = dataCreator.apellido?.toLocaleUpperCase();
+        dataCreator.nombre = dataCreator.nombre?.toLocaleUpperCase();
+        dataCreator.domicilio = dataCreator.domicilio?.toLocaleUpperCase();
+
         const nuevaPersona = await this.personasRepository.create(dataCreator);
-        persona = this.personasRepository.save(nuevaPersona);
+        persona =  await this.personasRepository.save(nuevaPersona);
         
       }
 

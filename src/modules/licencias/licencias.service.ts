@@ -1,21 +1,73 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LicenciasChoferes } from '../licencias-choferes/entities';
+import { LicenciasPermisionarios } from '../licencias-permisionario/entities';
+import { LicenciasVehiculos } from '../licencias-vehiculos/entities';
 import { Licencias } from './entities';
 
 @Injectable()
 export class LicenciasService {
 
   constructor(
-    @InjectRepository(Licencias) private readonly licenciasRepository: Repository<Licencias>
+    @InjectRepository(Licencias) private readonly licenciasRepository: Repository<Licencias>,
+    @InjectRepository(LicenciasPermisionarios) private readonly licenciasPermisionariosRepository: Repository<LicenciasPermisionarios>,
+    @InjectRepository(LicenciasChoferes) private readonly licenciasChoferesRepository: Repository<LicenciasChoferes>,
+    @InjectRepository(LicenciasVehiculos) private readonly licenciasVehiculosRepository: Repository<LicenciasVehiculos>,
   ) { }
 
   // Licencia por ID
-  async getId(id: number): Promise<Licencias> {
+  async getId(id: number): Promise<any> {
 
+    // Licencia
     const licencia = await this.licenciasRepository.findOne({ relations: ['licencia_chofer', 'licencia_permisionario', 'creatorUser', 'updatorUser'], where: { id } });
+
     if (!licencia) throw new NotFoundException('La licencia no existe');
-    return licencia;
+
+    const permisionario = await this.licenciasPermisionariosRepository.findOne({
+      relations: ['persona', 'creatorUser', 'updatorUser'],
+      where: {
+        licencia: { id },
+        activo: true
+      }
+    });
+
+    const vehiculo = await this.licenciasVehiculosRepository.findOne({
+      
+      relations: { 
+        vehiculo: {
+          marca: true,
+          modelo: true
+        }, 
+        creatorUser: true, 
+        updatorUser: true 
+      },
+      
+      where: {
+        licencia: { id },
+        activo: true
+      }
+      
+    })
+    ;
+
+    const choferes = await this.licenciasChoferesRepository.find({
+      relations: ['persona', 'creatorUser', 'updatorUser'],
+      where: {
+        licencia: { id },
+      },
+      order: { 
+        activo: -1, 
+        persona: { apellido: 1 }
+      }
+    });
+
+    return {
+      licencia,
+      permisionario,
+      choferes,
+      vehiculo
+    };
 
   }
 

@@ -27,7 +27,10 @@ export class LicenciasChoferesService {
 
     let parametros: any = { order };
 
-    const relaciones = await this.licenciasChoferesRepository.find({ relations: ['licencia', 'persona', 'creatorUser', 'updatorUser'] });
+    const relaciones = await this.licenciasChoferesRepository.find({ 
+      relations: ['licencia', 'persona', 'creatorUser', 'updatorUser'], 
+      order: { activo: -1 }
+    });
 
     return relaciones;
 
@@ -35,7 +38,18 @@ export class LicenciasChoferesService {
 
   // Crear relacion
   async insert(licenciasChoferesDTO: any): Promise<LicenciasChoferes[]> {
-        
+       
+    const { licencia, persona } = licenciasChoferesDTO;
+
+    const relacionExistente = await this.licenciasChoferesRepository.find({ 
+      where: { 
+        activo: true, 
+        licencia: { id: licencia }, 
+        persona: { id: persona } 
+      } 
+    });
+    if(relacionExistente.length !== 0) throw new NotFoundException('El chofer ya esta dado de alta en esta licencia');
+
     // Uppercase
     licenciasChoferesDTO.libreta_sanitaria = licenciasChoferesDTO.libreta_sanitaria?.toLocaleUpperCase().trim();
     licenciasChoferesDTO.certificado_antecedentes = licenciasChoferesDTO.certificado_antecedentes?.toLocaleUpperCase().trim();
