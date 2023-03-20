@@ -1,6 +1,7 @@
 import { LicenciasChoferes } from "src/modules/licencias-choferes/entities";
 import { LicenciasPermisionarios } from "src/modules/licencias-permisionario/entities/licencias-permisionarios.entity";
 import { Usuarios } from "src/modules/usuarios/entities";
+import { VehiculosTitulares } from "src/modules/vehiculos_titulares/entities";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
@@ -68,6 +69,9 @@ export class Personas {
 
   @OneToMany(() => LicenciasPermisionarios, licencia_permisionario => licencia_permisionario.persona)
   licencia_permisionario: LicenciasPermisionarios[]
+
+  @OneToMany(() => VehiculosTitulares, vehiculo_titular => vehiculo_titular.persona)
+  vehiculo_titular: VehiculosTitulares[]
 
   @ManyToOne(() => Usuarios, usuario => usuario.personas)
   @JoinColumn({ name: 'creatorUser' })

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { add } from 'date-fns';
 import { Like, Repository } from 'typeorm';
 import { VehiculosSeguros } from './entities';
 
@@ -23,6 +24,7 @@ export class VehiculosSegurosService {
   async getAll({
     columna,
     direccion,
+    vehiculo,
     activo,
     parametro,
     desde,
@@ -36,52 +38,89 @@ export class VehiculosSegurosService {
     // Filtrando datos
     let where = [];
 
-    // Filtrado por número de poliza
-    where.push({ nro_poliza: Like('%' + parametro.toUpperCase() + '%') });
-    
-    // Filtrado por empresa
-    where.push({
-      empresa: {
-        descripcion: Like('%' + parametro.toUpperCase() + '%')
-      }
+    where.push({ 
+      vehiculo: { id: vehiculo }, 
+      empresa: { descripcion: Like('%' + parametro.toUpperCase() + '%') }
     });
 
-    const totalItems = await this.vehiculosSegurosRepository.count({ where });
-
-    const seguros = await this.vehiculosSegurosRepository
-      .find({
+    where.push({ 
+      vehiculo: { id: vehiculo }, 
+      nro_poliza: Like('%' + parametro.toUpperCase() + '%'),
+    });
+    
+    const [seguros, seguroActivo, totalItems] = await Promise.all([
+      await this.vehiculosSegurosRepository
+        .find({
+          relations: [
+            'vehiculo',
+            'empresa',
+            'creatorUser',
+            'updatorUser',
+          ],
+          order,
+          skip: Number(desde),
+          take: Number(cantidadItems),
+          where
+        }),
+      await this.vehiculosSegurosRepository
+      .findOne({
         relations: [
-          'vehiculo', 
-          'empresa', 
+          'vehiculo',
+          'empresa',
           'creatorUser',
           'updatorUser',
         ],
-        order,
-        skip: Number(desde),
-        take: Number(cantidadItems),
-        where
-      });
+        where: {
+          vehiculo: { id: vehiculo },
+          activo: true
+        }
+      }),
+      await this.vehiculosSegurosRepository.count({ where }),
+    ]);
 
     return {
       seguros,
+      seguroActivo,
       totalItems
     };
 
   }
 
   // Crear seguro
-  async insert(vehiculosSegurosDTO: any): Promise<VehiculosSeguros[]> {
+  async insert(vehiculosSegurosDTO: any): Promise<VehiculosSeguros> {
 
     // Uppercase
     vehiculosSegurosDTO.nro_poliza = vehiculosSegurosDTO.nro_poliza.toLocaleUpperCase().trim();
 
-    const { nro_poliza } = vehiculosSegurosDTO;
+    const {
+      nro_poliza,
+      empresa,
+      vehiculo,
+      fecha_desde,
+      fecha_hasta,
+      creatorUser,
+      updatorUser
+    } = vehiculosSegurosDTO;
 
     // Verificacion: Nro de poliza repetido
     let seguroDB = await this.vehiculosSegurosRepository.findOneBy({ nro_poliza });
     if (seguroDB) throw new NotFoundException('El número de poliza ya se encuentra cargado');
 
-    const nuevoSeguro = await this.vehiculosSegurosRepository.create(vehiculosSegurosDTO);
+    // Baja de seguro actual
+    await this.vehiculosSegurosRepository.update({ vehiculo }, { activo: false });
+
+    // Se crea el seguro actual
+    const data = {
+      empresa,
+      vehiculo,
+      nro_poliza,
+      fecha_desde: add(new Date(fecha_desde), { hours: 3 }),
+      fecha_hasta: add(new Date(fecha_hasta), { hours: 3 }),
+      creatorUser,
+      updatorUser
+    }
+
+    const nuevoSeguro = await this.vehiculosSegurosRepository.create(data);
     return this.vehiculosSegurosRepository.save(nuevoSeguro);
 
   }

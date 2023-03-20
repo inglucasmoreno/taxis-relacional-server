@@ -26,13 +26,14 @@ export class VehiculosSegurosController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async listarSeguros(@Res() res, @Query() query): Promise<VehiculosSeguros[]> {
-    const {seguros, totalItems} = await this.vehiculosSegurosService.getAll(query);
+    const {seguros, totalItems, seguroActivo} = await this.vehiculosSegurosService.getAll(query);
 
     return res.status(HttpStatus.OK).json({
       success: true,
       message: 'Seguros obtenidos correctamente',
       seguros,
-      totalItems     
+      totalItems,     
+      seguroActivo,
     })
 
   }
@@ -40,8 +41,6 @@ export class VehiculosSegurosController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async nuevoSeguro(@Res() res, @Body() vehiculosSegurosDTO: VehiculosSegurosDTO): Promise<VehiculosSeguros> {
-
-    console.log(vehiculosSegurosDTO);
 
     const seguro = await this.vehiculosSegurosService.insert(vehiculosSegurosDTO);
 

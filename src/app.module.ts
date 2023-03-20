@@ -27,6 +27,7 @@ import { LicenciasChoferesModule } from './modules/licencias-choferes/licencias-
 import { LicenciasVehiculosModule } from './modules/licencias-vehiculos/licencias-vehiculos.module';
 import { LicenciasPermisionarioModule } from './modules/licencias-permisionario/licencias-permisionario.module';
 import { SigemModule } from './modules/sigem/sigem.module';
+import { VehiculosTitularesModule } from './modules/vehiculos_titulares/vehiculos_titulares.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { SigemModule } from './modules/sigem/sigem.module';
     LicenciasVehiculosModule,
     LicenciasPermisionarioModule,
     SigemModule,
+    VehiculosTitularesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
