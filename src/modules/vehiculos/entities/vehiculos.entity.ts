@@ -68,8 +68,8 @@ export class Vehiculos {
   @OneToMany(() => LicenciasVehiculos, licencia_vehiculo => licencia_vehiculo.vehiculo)
   licencia_vehiculo: LicenciasVehiculos[];
 
-  // @OneToMany(() => VehiculosTitulares, vehiculo_titular => vehiculo_titular.vehiculo)
-  // vehiculo_titular: VehiculosTitulares[];
+  @OneToMany(() => VehiculosTitulares, vehiculo_titular => vehiculo_titular.vehiculo)
+  vehiculo_titular: VehiculosTitulares[];
 
   @ManyToOne(() => Usuarios, usuario => usuario.personas)
   @JoinColumn({ name: 'creatorUser' })
