@@ -52,6 +52,19 @@ export class VehiculosTitularesController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('/multiples')
+  async nuevosTitulares(@Res() res, @Body() titulares: any): Promise<VehiculosTitulares> {
+
+    await this.vehiculosTitularesService.insert(titulares);
+
+    return res.status(HttpStatus.CREATED).json({
+      success: true,
+      message: 'Titulares creados correctamente',
+    })
+  
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async actualizarTitular(@Res() res, @Param('id') id: number, @Body() vehiculosTitularesUpdateDTO: any){
 

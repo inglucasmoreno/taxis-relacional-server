@@ -15,6 +15,7 @@ export class VehiculosTitularesDTO {
     porcentaje: number;
 
     @IsString()
+    @IsOptional()
     fecha_inscripcion_inicial: string;
 
     @IsBoolean()

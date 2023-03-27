@@ -26,10 +26,14 @@ export class VehiculosTitularesService {
   }
   
   // Listar todos los titulares
-  async getAll({ columna, direccion }: any): Promise<VehiculosTitulares[]> {
+  async getAll({ columna, direccion, vehiculo }: any): Promise<VehiculosTitulares[]> {
 
     let order = {};
     order[columna] = Number(direccion);
+
+    let where = [];
+
+    if(vehiculo !== '') where.push({ vehiculo: { id: Number(vehiculo) } });
 
     const titulares = await this.vehiculosTitularesRepository.find({ 
       relations: {
@@ -38,7 +42,8 @@ export class VehiculosTitularesService {
         creatorUser: true,
         updatorUser: true
       }, 
-      order 
+      order,
+      where
     });
 
     return titulares;
@@ -49,6 +54,30 @@ export class VehiculosTitularesService {
   async insert(vehiculosTitularesDTO: any): Promise<VehiculosTitulares[]> {
     const nuevoTitular = await this.vehiculosTitularesRepository.create(vehiculosTitularesDTO);
     return this.vehiculosTitularesRepository.save(nuevoTitular);
+  }
+
+  // Crear multiples titulares
+  async multiInsert(titulares: any[]): Promise<any> {
+
+    titulares.map( async titular => {
+      
+      const data = {
+        numero_titulo: titular.numero_titulo,
+        vehiculo: titular.vehiculo,
+        persona: titular.persona,
+        porcentaje: titular.porcentaje,
+        fecha_inscripcion_inicial: titular.fecha_inscripcion_inicial,
+        activo: true
+      };
+
+      console.log(data);
+
+      await this.vehiculosTitularesRepository.create(data);
+      await this.vehiculosTitularesRepository.save(data);
+    })
+  
+    return 'Titulares cargados correctamente';
+
   }
 
   // Actualizar titular
