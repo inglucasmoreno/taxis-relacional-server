@@ -59,6 +59,8 @@ export class LicenciasController {
 
     const licencia = await this.licenciasService.update(id, licenciasUpdateDTO);
 
+    console.log(licencia);
+
     res.status(HttpStatus.OK).json({
       success: true,
       message: 'Licencia actualizada correctamente',
