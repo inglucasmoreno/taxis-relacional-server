@@ -64,7 +64,7 @@ export class LicenciasVehiculosService {
         }
       },
       where: {
-        vehiculo: { id: vehiculo },
+        licencia: { id: licencia },
         activo: true
       }
     });

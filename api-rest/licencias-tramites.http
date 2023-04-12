@@ -1,0 +1,13 @@
+
+### -> Cambio de unidad
+
+POST http://localhost:3000/licencias-tramites
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODEzMDg1NjgsImV4cCI6MTY4MTM1MTc2OH0.9JhXZJx3cNxp3RxujQnIeg_Pktwa678UCknNsefPdSE
+Content-Type: application/json
+
+{
+  "vehiculo": 2,
+  "licencia": 2,
+  "creatorUser": 2,
+  "updatorUser": 2
+}
