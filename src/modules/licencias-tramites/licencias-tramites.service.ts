@@ -18,14 +18,94 @@ export class LicenciasTramitesService {
     @InjectRepository(Vehiculos) private readonly vehiculosRepository: Repository<Vehiculos>,
   ) { }
 
-  // Transferencia -> continuando
+  // Transferencia -> Continuando (Sin cambio de unidad)
   async transferenciaContinuando(data: any): Promise<any> {
-    return '';
+
+    const { licencia, persona } = data;
+
+    // Verificacion -> Ya es permisionario de esta licencia
+    let permisionarioRepetido = null;
+
+    permisionarioRepetido = await this.licenciasPermisionariosRepository.findOne({
+      relations: {
+        licencia: true,
+        persona: true
+      },
+      where: {
+        persona: { id: persona }, 
+        activo: true 
+    }});
+
+    if (permisionarioRepetido) throw new NotFoundException(`La persona ya es permisionario de la licencia ${permisionarioRepetido.licencia.nro_licencia}`);
+
+    // Alta y Baja de permisionario
+    let permisionarioAlta = await this.licenciasPermisionariosRepository.create(data);
+
+    const [_, permisionarioAltaDB] = await Promise.all([
+      this.licenciasPermisionariosRepository.update({ licencia, activo: true },{ activo: false }),
+      this.licenciasPermisionariosRepository.save(permisionarioAlta)
+    ])
+  
+    return permisionarioAltaDB;
+
   }
 
-  // Transferencia -> con cambio de unidad
-  async transferenciaConCambioDeUnidad(data: any): Promise<any> {
-    return '';
+  // Transferencia -> Con cambio de unidad
+  async transferenciaCambioUnidad(data: any): Promise<any> {
+
+    const { licencia, persona, vehiculo } = data;
+
+    // Verificacion -> Ya es permisionario de esta licencia
+    // Verificacion -> Vehiculo activo en esta licencia
+    
+    let permisionarioRepetido = null;
+    let vehiculoRepetido = null;
+
+    [permisionarioRepetido, vehiculoRepetido] = await Promise.all([
+      this.licenciasPermisionariosRepository.findOne({
+        relations: {
+          licencia: true,
+          persona: true
+        },
+        where: {
+          persona: { id: persona }, 
+          activo: true 
+      }}),
+      this.licenciasVehiculosRepository.findOne({
+        relations: {
+          licencia: true,
+          vehiculo: true
+        },
+        where: {
+          vehiculo: { id: vehiculo }, 
+          activo: true 
+      }})
+    ])
+
+    if (permisionarioRepetido) throw new NotFoundException(`La persona ya es permisionario de la licencia ${permisionarioRepetido.licencia.nro_licencia}`);
+    if (vehiculoRepetido) throw new NotFoundException(`El vehículo ya se encuentra asociado a la licencia ${vehiculoRepetido.licencia.nro_licencia}`);
+
+    // Alta y Baja de permisionario
+    let permisionarioAlta = await this.licenciasPermisionariosRepository.create(data);
+
+    const [_, permisionarioAltaDB] = await Promise.all([
+      this.licenciasPermisionariosRepository.update({ licencia, activo: true },{ activo: false }),
+      this.licenciasPermisionariosRepository.save(permisionarioAlta)
+    ])
+
+    // Alta y Baja de unidad
+    let vehiculoAlta = await this.licenciasVehiculosRepository.create(data);
+
+    const [__, vehiculoAltaDB] = await Promise.all([
+      this.licenciasVehiculosRepository.update({ licencia, activo: true }, { activo: false }),
+      this.licenciasVehiculosRepository.save(vehiculoAlta)   
+    ])
+
+    return {
+      relacion_permisionario: permisionarioAltaDB,
+      relacion_vehiculo: vehiculoAltaDB
+    };
+
   }
 
   // Cambio de unidad 
@@ -48,12 +128,13 @@ export class LicenciasTramitesService {
       
     if (vehiculoRepetido) throw new NotFoundException(`El vehículo ya se encuentra asociado a la licencia ${vehiculoRepetido.licencia.nro_licencia}`);
 
-    // Baja de vehiculo actual
-    await this.licenciasVehiculosRepository.update({ licencia, activo: true }, { activo: false });     
-
-    // Alta de nuevo vehiculo
+    // Alta y Baja de unidad
     let vehiculoAlta = await this.licenciasVehiculosRepository.create(data);
-    let vehiculoAltaDB = await this.licenciasVehiculosRepository.save(vehiculoAlta);
+
+    const [_, vehiculoAltaDB] = await Promise.all([
+      this.licenciasVehiculosRepository.update({ licencia, activo: true }, { activo: false }),
+      this.licenciasVehiculosRepository.save(vehiculoAlta)   
+    ])
 
     return vehiculoAltaDB;
   

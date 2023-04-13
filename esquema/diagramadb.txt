@@ -1,0 +1,204 @@
+Table licencias {
+  id integer [pk]
+  nro_licencia string
+  estado string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table licencias_vehiculos {
+  id integer [pk]
+  vehiculo_id number
+  licencia_id number
+  estado string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table licencias_permisionarios {
+  id integer [pk]
+  persona_id number
+  licencia_id number
+  estado string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table licencias_choferes {
+  id integer [pk]
+  persona_id number
+  licencia_id number
+  estado string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table personas {
+  id integer [pk]
+  apellido string
+  nombre string
+  dni string
+  domicilio string
+  mail string
+  telefono string
+  sigem boolean
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table vehiculos {
+  id integer [pk]
+  patente string
+  marca_id integer
+  modelo_id integer
+  color_id integer
+  ano number
+  motor string
+  chasis string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table vehiculos_colores {
+  id integer [pk]
+  descripcion string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table vehiculos_marcas {
+  id integer [pk]
+  descripcion string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table vehiculos_modelos {
+  id integer [pk]
+  marca_id integer
+  descripcion string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table vehiculos_seguros {
+  id integer [pk]
+  vehiculo_id integer
+  empresa_id integer
+  nro_poliza string
+  fecha_desde date
+  fecha_hasta date
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table seguros_empresas {
+  id integer [pk]
+  descripcion string
+  direccion string
+  telefono string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table vehiculos_titulares {
+  id integer [pk]
+  vehiculo_id integer
+  persona_id integer
+  porcentaje integeer
+  fecha_inscripcion_inicial date
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table relojes {
+  id integer [pk]
+  nro_serie string
+  marca_id integer
+  modelo_id integer
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table relojes_marcas {
+  id integer [pk]
+  descripcion string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table relojes_modelos {
+  id integer [pk]
+  marca_id number
+  descripcion string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table relojes_precintos {
+  id integer [pk]
+  nro_precinto string
+  motivo string
+  fecha_colocacion date
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table relojes_precintos_motivos {
+  id integer [pk]
+  descripcion string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+

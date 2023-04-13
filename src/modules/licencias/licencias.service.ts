@@ -46,10 +46,9 @@ export class LicenciasService {
       where: {
         licencia: { id },
         activo: true
-      }
-      
-    })
-    ;
+      },
+            
+    });
 
     const choferes = await this.licenciasChoferesRepository.find({
       relations: ['persona', 'creatorUser', 'updatorUser'],

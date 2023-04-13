@@ -1,13 +1,40 @@
 
 ### -> Cambio de unidad
 
-POST http://localhost:3000/licencias-tramites
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODEzMDg1NjgsImV4cCI6MTY4MTM1MTc2OH0.9JhXZJx3cNxp3RxujQnIeg_Pktwa678UCknNsefPdSE
+POST http://localhost:3000/licencias-tramites/cambio-unidad
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODEzODk4MjQsImV4cCI6MTY4MTQzMzAyNH0.2f-7mmeNQtEUc4doB1WDDvC_3xnmbwqd30X3U-rnVWo
 Content-Type: application/json
 
 {
-  "vehiculo": 2,
-  "licencia": 2,
+  "vehiculo": 1,
+  "licencia": 1,
+  "creatorUser": 2,
+  "updatorUser": 2
+}
+
+### -> Transferencia continuando
+
+POST http://localhost:3000/licencias-tramites/transferencia-continuando
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODEzOTAyNjYsImV4cCI6MTY4MTQzMzQ2Nn0.vwVxnm1SquRaGp0oWUWIBEoxNCRuNIXUjZxj4Qp6qZY
+Content-Type: application/json
+
+{
+  "persona": 3,
+  "licencia": 1,
+  "creatorUser": 2,
+  "updatorUser": 2
+}
+
+### -> Transferencia con cambio de unidad
+
+POST http://localhost:3000/licencias-tramites/transferencia-cambio-unidad
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODEzOTAyNjYsImV4cCI6MTY4MTQzMzQ2Nn0.vwVxnm1SquRaGp0oWUWIBEoxNCRuNIXUjZxj4Qp6qZY
+Content-Type: application/json
+
+{
+  "persona": 3,
+  "vehiculo": 1,
+  "licencia": 1,
   "creatorUser": 2,
   "updatorUser": 2
 }
