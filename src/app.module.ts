@@ -29,6 +29,7 @@ import { LicenciasPermisionarioModule } from './modules/licencias-permisionario/
 import { SigemModule } from './modules/sigem/sigem.module';
 import { VehiculosTitularesModule } from './modules/vehiculos_titulares/vehiculos_titulares.module';
 import { LicenciasTramitesModule } from './modules/licencias-tramites/licencias-tramites.module';
+import { TiposServiciosModule } from './modules/tipos-servicios/tipos-servicios.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { LicenciasTramitesModule } from './modules/licencias-tramites/licencias-
     SigemModule,
     VehiculosTitularesModule,
     LicenciasTramitesModule,
+    TiposServiciosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

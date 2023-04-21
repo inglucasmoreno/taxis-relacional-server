@@ -29,12 +29,14 @@ export class LicenciasController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async listarLicencias(@Res() res, @Query() query): Promise<Licencias[]> {
-    const licencias = await this.licenciasService.getAll(query);
+    
+    const { licencias, totalItems } = await this.licenciasService.getAll(query);
 
     return res.status(HttpStatus.OK).json({
       success: true,
       message: 'Licencias obtenidos correctamente',
-      licencias
+      licencias,
+      totalItems
     })
 
   }

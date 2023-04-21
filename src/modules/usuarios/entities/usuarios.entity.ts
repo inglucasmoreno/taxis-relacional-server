@@ -8,6 +8,7 @@ import { RelojesModelos } from "src/modules/relojes-modelos/entities";
 import { RelojesPrecintosMotivos } from "src/modules/relojes-precintos-motivos/entities";
 import { Relojes } from "src/modules/relojes/entities";
 import { SegurosEmpresas } from "src/modules/seguros-empresas/entities";
+import { TiposServicios } from "src/modules/tipos-servicios/entities";
 import { VehiculosColores } from "src/modules/vehiculos-colores/entities";
 import { VehiculosMarcas } from "src/modules/vehiculos-marcas/entities";
 import { VehiculosModelos } from "src/modules/vehiculos-modelos/entities";
@@ -115,5 +116,8 @@ export class Usuarios {
 
   @OneToMany(() => VehiculosColores, () => {})
   colores: VehiculosColores[];
+
+  @OneToMany(() => TiposServicios, () => {})
+  tipos_servicios: TiposServicios[];
 
 }

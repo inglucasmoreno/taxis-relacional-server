@@ -1,0 +1,1 @@
+export { TiposServicios } from './tipos-servicios.entity';

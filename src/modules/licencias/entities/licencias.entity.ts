@@ -1,8 +1,9 @@
 import { LicenciasChoferes } from "src/modules/licencias-choferes/entities";
 import { LicenciasPermisionarios } from "src/modules/licencias-permisionario/entities/licencias-permisionarios.entity";
 import { LicenciasVehiculos } from "src/modules/licencias-vehiculos/entities";
+import { TiposServicios } from "src/modules/tipos-servicios/entities";
 import { Usuarios } from "src/modules/usuarios/entities";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Licencias {
@@ -32,6 +33,10 @@ export class Licencias {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => TiposServicios, tipo_servicio => tipo_servicio.licencias)
+  @JoinColumn({ name: 'tipo_servicio_id' })
+  tipo_servicio: TiposServicios
 
   @OneToMany(() => LicenciasChoferes, licencia_chofer => licencia_chofer.licencia)
   licencia_chofer: LicenciasChoferes[]

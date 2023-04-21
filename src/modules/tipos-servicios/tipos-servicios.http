@@ -1,0 +1,46 @@
+### -> Autenticacion
+
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "username": "lmoreno",
+    "password": "craneo"
+}
+
+
+### -> Tipo de servicio por ID
+
+GET http://localhost:3000/tipos-servicios/1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODIwNzc2NTEsImV4cCI6MTY4MjEyMDg1MX0.lqMbvpeSwNvEaswcPSvlPqV5yy71CJwR7AqwIxT5I1E
+Content-Type: application/json
+
+### -> Listar tipos de servicios
+
+GET http://localhost:3000/tipos-servicios
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODIwNzc2NTEsImV4cCI6MTY4MjEyMDg1MX0.lqMbvpeSwNvEaswcPSvlPqV5yy71CJwR7AqwIxT5I1E
+Content-Type: application/json
+
+### -> Nuevo tipo de servicio
+
+POST http://localhost:3000/tipos-servicios
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODIwNzc2NTEsImV4cCI6MTY4MjEyMDg1MX0.lqMbvpeSwNvEaswcPSvlPqV5yy71CJwR7AqwIxT5I1E
+Content-Type: application/json
+
+{
+    "descripcion": "Taxi",
+    "creatorUser": 2,
+    "updatorUser": 2
+}
+
+### -> Actualizar tipo de servicio
+
+PATCH http://localhost:3000/tipos-servicios/1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzdWFyaW8iOiJsbW9yZW5vIiwiYXBlbGxpZG8iOiJNT1JFTk8iLCJub21icmUiOiJMVUNBUyBPTUFSIiwicm9sZSI6IkFETUlOX1JPTEUiLCJpYXQiOjE2ODIwNzc2NTEsImV4cCI6MTY4MjEyMDg1MX0.lqMbvpeSwNvEaswcPSvlPqV5yy71CJwR7AqwIxT5I1E
+Content-Type: application/json
+
+{
+    "descripcion": "Taxi",
+    "updatorUser": 2
+}
+

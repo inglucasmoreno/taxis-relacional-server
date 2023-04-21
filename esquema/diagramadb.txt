@@ -9,6 +9,16 @@ Table licencias {
   updated_at timestamp
 }
 
+Table tipo_servicio {
+  id integer [pk]
+  descripcion string
+  activo boolean
+  creatorUser integer
+  updatorUser integer
+  created_at timestamp
+  updated_at timestamp
+}
+
 Table licencias_vehiculos {
   id integer [pk]
   vehiculo_id number

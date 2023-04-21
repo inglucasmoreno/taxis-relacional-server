@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { LicenciasChoferes } from '../licencias-choferes/entities';
 import { LicenciasPermisionarios } from '../licencias-permisionario/entities';
 import { LicenciasVehiculos } from '../licencias-vehiculos/entities';
@@ -20,7 +20,7 @@ export class LicenciasService {
   async getId(id: number): Promise<any> {
 
     // Licencia
-    const licencia = await this.licenciasRepository.findOne({ relations: ['licencia_chofer', 'licencia_permisionario', 'creatorUser', 'updatorUser'], where: { id } });
+    const licencia = await this.licenciasRepository.findOne({ relations: ['licencia_chofer', 'licencia_permisionario', 'tipo_servicio', 'creatorUser', 'updatorUser'], where: { id } });
 
     if (!licencia) throw new NotFoundException('La licencia no existe');
 
@@ -33,30 +33,31 @@ export class LicenciasService {
     });
 
     const vehiculo = await this.licenciasVehiculosRepository.findOne({
-      
-      relations: { 
+
+      relations: {
         vehiculo: {
           marca: true,
           modelo: true
-        }, 
-        creatorUser: true, 
-        updatorUser: true 
+        },
+        creatorUser: true,
+        updatorUser: true
       },
-      
+
       where: {
         licencia: { id },
         activo: true
       },
-            
+
     });
 
     const choferes = await this.licenciasChoferesRepository.find({
+
       relations: ['persona', 'creatorUser', 'updatorUser'],
       where: {
         licencia: { id },
       },
-      order: { 
-        activo: -1, 
+      order: {
+        activo: -1,
         persona: { apellido: 1 }
       }
     });
@@ -71,16 +72,52 @@ export class LicenciasService {
   }
 
   // Listar todas las licencias
-  async getAll({ columna, direccion }: any): Promise<Licencias[]> {
+  async getAll({
+    columna,
+    direccion,
+    activo,
+    parametro,
+    tipo_servicio,
+    estado,
+    desde,
+    cantidadItems
+  }: any): Promise<any> {
 
+    // Ordenando datos
     let order = {};
-    order[columna] = direccion;
+    order[columna] = Number(direccion);
 
-    let parametros: any = { order };
+    // Filtrando datos
+    let where = [];
 
-    const licencias = await this.licenciasRepository.find({ relations: ['licencia_chofer', 'licencia_permisionario', 'creatorUser', 'updatorUser'] });
+    let objFilter: any = {};
+    objFilter.nro_licencia = Like('%' + parametro.toUpperCase() + '%');
+    if(estado && estado !== '') objFilter.estado = estado;
+    if(tipo_servicio && tipo_servicio !== '') objFilter.tipo_servicio = { id: Number(tipo_servicio) };
 
-    return licencias;
+    console.log(objFilter);
+
+    where.push(objFilter);
+
+    const totalItems = await this.licenciasRepository.count({ where });
+
+    const licencias = await this.licenciasRepository
+      .find({
+        relations: [
+          'tipo_servicio',
+          'creatorUser',
+          'updatorUser',
+        ],
+        order,
+        skip: Number(desde),
+        take: Number(cantidadItems),
+        where
+      });
+
+    return {
+      licencias,
+      totalItems
+    };
 
   }
 
