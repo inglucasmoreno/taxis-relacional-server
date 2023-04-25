@@ -56,7 +56,6 @@ export class VehiculosService {
 
   }
 
-
   // Listar todos los vehiculos
   async getAll({
     columna,
@@ -68,8 +67,17 @@ export class VehiculosService {
   }: any): Promise<any> {
 
     // Ordenando datos
-    let order = {};
-    order[columna] = Number(direccion);
+    let order: any = {};
+
+    if(columna === 'marca'){
+      order = { marca: { descripcion: Number(direccion) }}
+    }else if(columna === 'modelo') {
+      order = { modelo: { descripcion: Number(direccion) }}
+    }else if(columna === 'color') {
+      order = { color: { descripcion: Number(direccion) }}
+    }else{
+      order[columna] = Number(direccion);
+    }
 
     // Filtrando datos
     let where = [];

@@ -22,8 +22,21 @@ export class LicenciasVehiculosService {
   // Listar relaciones
   async getAll({ columna, direccion, licencia }: any): Promise<LicenciasVehiculos[]> {
 
+    // Ordenando informacion
     let order = {};
-    order[columna] = direccion;
+
+    if(columna === 'marca'){
+      order = { vehiculo: { marca: { descripcion: Number(direccion)} }}
+    }
+    else if(columna === 'modelo'){
+      order = { vehiculo: { modelo: { descripcion: Number(direccion) } } }
+    }
+    else if(columna === 'patente'){
+      order = { vehiculo: { patente: Number(direccion) } }
+    }
+    else{
+      order[columna] = Number(direccion);
+    }
 
     const relaciones = await this.licenciasVehiculosRepository.find({ 
       relations: {
@@ -34,12 +47,7 @@ export class LicenciasVehiculosService {
         creatorUser: true,
         updatorUser: true
       },
-      order: {
-        activo: -1,
-        vehiculo: {
-          patente: 1
-        }
-      },
+      order,
       where: {
         licencia: { id: licencia }
       }

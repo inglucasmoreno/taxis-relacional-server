@@ -84,9 +84,14 @@ export class LicenciasService {
   }: any): Promise<any> {
 
     // Ordenando datos
-    let order = {};
-    order[columna] = Number(direccion);
+    let order: any = {};
 
+    if(columna === 'tipo_servicio'){
+      order = { tipo_servicio: { descripcion: Number(direccion) }}
+    }else{
+      order[columna] = Number(direccion);
+    }
+    
     // Filtrando datos
     let where = [];
 
@@ -94,8 +99,6 @@ export class LicenciasService {
     objFilter.nro_licencia = Like('%' + parametro.toUpperCase() + '%');
     if(estado && estado !== '') objFilter.estado = estado;
     if(tipo_servicio && tipo_servicio !== '') objFilter.tipo_servicio = { id: Number(tipo_servicio) };
-
-    console.log(objFilter);
 
     where.push(objFilter);
 

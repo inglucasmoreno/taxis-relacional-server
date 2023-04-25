@@ -16,22 +16,29 @@ export class LicenciasPermisionarioService {
     if (!relacion) throw new NotFoundException('La relacion no existe');
     return relacion;
   }
-  
+
   // Listar relaciones
   async getAll({ columna, direccion, licencia }: any): Promise<LicenciasPermisionarios[]> {
 
     let order = {};
-    order['activo'] = -1;
-    // order[columna] = direccion;
-    order['persona'] = { apellido: 1 };
 
-    let parametros: any = { order };
+    if(columna === 'apellido'){
+      order = { persona: { apellido: Number(direccion) }}
+    }
+    else if(columna === 'nombre'){
+      order = { persona: { nombre: Number(direccion) }}
+    }
+    else if(columna === 'dni'){
+      order = { persona: { dni: Number(direccion) }}
+    }
+    else{
+      order[columna] = Number(direccion);
+    }
 
-    const relaciones = await this.licenciasPermisionariosRepository.find({ 
+    const relaciones = await this.licenciasPermisionariosRepository.find({
       relations: ['licencia', 'persona'],
-      order, 
+      order,
       where: { licencia: { id: licencia } },
-      // order: { activo: -1, persona: { apellido: 1 } }
     });
 
     return relaciones;
@@ -40,16 +47,16 @@ export class LicenciasPermisionarioService {
 
   // Crear relacion
   async insert(licenciasPermisionariosDTO: any): Promise<LicenciasPermisionarios[]> {
-    
+
     const { licencia, persona } = licenciasPermisionariosDTO;
 
     // Se verifica si el permisionario ya esta dado de alta en esta licencia
-    const altaExistente = await this.licenciasPermisionariosRepository.findOne({ 
-      where: { 
-        activo: true, 
-        licencia: { id: licencia }, 
-        persona: { id: persona } 
-      } 
+    const altaExistente = await this.licenciasPermisionariosRepository.findOne({
+      where: {
+        activo: true,
+        licencia: { id: licencia },
+        persona: { id: persona }
+      }
     });
     if(altaExistente) throw new NotFoundException('El permisionario ya esta activo en esta licencia');
 
@@ -88,7 +95,7 @@ export class LicenciasPermisionarioService {
 
     await this.licenciasPermisionariosRepository.update({ id }, licenciasPermisionariosUpdateDTO);
     return this.getId(id);
-    
+
   }
 
 }

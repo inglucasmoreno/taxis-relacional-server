@@ -23,13 +23,23 @@ export class LicenciasChoferesService {
   async getAll({ columna, direccion }: any): Promise<LicenciasChoferes[]> {
 
     let order = {};
-    order[columna] = direccion;
 
-    let parametros: any = { order };
+    if(columna === 'apellido'){
+      order = { persona: { apellido: Number(direccion) }}
+    }
+    else if(columna === 'nombre'){
+      order = { persona: { nombre: Number(direccion) }}
+    }
+    else if(columna === 'dni'){
+      order = { persona: { dni: Number(direccion) }}
+    }
+    else{
+      order[columna] = Number(direccion);
+    }
 
     const relaciones = await this.licenciasChoferesRepository.find({ 
       relations: ['licencia', 'persona', 'creatorUser', 'updatorUser'], 
-      order: { activo: -1 }
+      order
     });
 
     return relaciones;
